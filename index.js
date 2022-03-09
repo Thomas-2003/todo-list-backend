@@ -37,6 +37,11 @@ app.get('/todos', (req, res) => {
             return 0;
         })
     }
+    if (req.query.filter === "completed") {
+        jsonResponse = jsonResponse.filter(todo => todo.completed)
+    } else if (req.query.filter === "uncompleted") {
+        jsonResponse = jsonResponse.filter(todo => !todo.completed)
+    }
     res.json(jsonResponse)
 })
 
