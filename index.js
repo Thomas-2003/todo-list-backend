@@ -30,6 +30,10 @@ app.get('/todos', (req, res) => {
     res.json(jsonResponse)
 })
 
+app.get('*', function (req, res) { // wildcard route, to catch all missing routes
+    res.send('This route is not found', 404);
+});
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
