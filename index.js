@@ -10,8 +10,10 @@ app.get('/', (req, res) => {
 
     res.send('Hello World!')
 })
+//TODO support the use of query params, to sort the list by title
+
 app.get('/todos', (req, res) => {
-    const jsonResponse = [{
+    let jsonResponse = [{
         title: "Bread",
         id: 1,
         completed: false
@@ -19,7 +21,7 @@ app.get('/todos', (req, res) => {
     {
         title: "Milk",
         id: 2,
-        completed: false
+        completed: true
     },
     {
         title: "Beer",
@@ -27,6 +29,14 @@ app.get('/todos', (req, res) => {
         completed: false
     }]
     console.log(`GET /todos at ${Date.now()}`)
+    console.log(req.query);
+    if (req.query.sort === "title") {
+        jsonResponse = jsonResponse.sort((a, b) => {
+            if (a.title < b.title) { return -1; }
+            if (a.title > b.title) { return 1; }
+            return 0;
+        })
+    }
     res.json(jsonResponse)
 })
 
