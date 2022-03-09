@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
 const port = 4000
-
+const cors = require('cors');
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 app.get('/', (req, res) => {
     console.log(`GET / at ${Date.now()}`)
 
@@ -9,17 +12,17 @@ app.get('/', (req, res) => {
 })
 app.get('/todos', (req, res) => {
     const jsonResponse = [{
-        title: "bread",
+        title: "Bread",
         id: 1,
         completed: false
     },
     {
-        title: "milk",
+        title: "Milk",
         id: 2,
         completed: false
     },
     {
-        title: "beer",
+        title: "Beer",
         id: 3,
         completed: false
     }]
