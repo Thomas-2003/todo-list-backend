@@ -1,0 +1,14 @@
+{
+  "name": "todo-list-backend",
+  "version": "1.0.0",
+  "description": "Simple express server for handling todo-list requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Rönneper",
+  "license": "ISC",
+  "repository": {
+    "url": "https://github.com/Thomas-2003/todo-list-backend.git"
+  }
+}
