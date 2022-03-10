@@ -44,8 +44,13 @@ app.get('/todos', (req, res) => {
     }
     res.json(jsonResponse)
 })
+app.get('/todos/save', (req, res) => {
+    console.log(`GET /todos/save at ${Date.now()}`)
 
+    res.json({ message: "yay" })
+})
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
+    console.log(`GET 404 at ${Date.now()}`)
     res.send('This route is not found', 404);
 });
 
