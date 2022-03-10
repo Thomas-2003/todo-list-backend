@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 4000
 const cors = require('cors');
+const fs = require('fs');
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
@@ -46,7 +47,10 @@ app.get('/todos', (req, res) => {
 })
 app.get('/todos/save', (req, res) => {
     console.log(`GET /todos/save at ${Date.now()}`)
-
+    fs.writeFile('./todos.txt', Date.now().toString(), 'utf8', function (err) {
+        if (err) return console.log(err);
+        console.log('Hello World > helloworld.txt');
+    })
     res.json({ message: "yay" })
 })
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
