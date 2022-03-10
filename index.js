@@ -13,41 +13,43 @@ app.get('/', (req, res) => {
 })
 //TODO support the use of query params, to sort the list by title
 
+let initialTodos = [{
+    title: "Bread",
+    id: 1,
+    completed: false
+},
+{
+    title: "Milk",
+    id: 2,
+    completed: true
+},
+{
+    title: "Beer",
+    id: 3,
+    completed: false
+}]
 app.get('/todos', (req, res) => {
-    let jsonResponse = [{
-        title: "Bread",
-        id: 1,
-        completed: false
-    },
-    {
-        title: "Milk",
-        id: 2,
-        completed: true
-    },
-    {
-        title: "Beer",
-        id: 3,
-        completed: false
-    }]
     console.log(`GET /todos at ${Date.now()}`)
     console.log(req.query);
     if (req.query.sort === "title") {
-        jsonResponse = jsonResponse.sort((a, b) => {
+        initialTodos = initialTodos.sort((a, b) => {
             if (a.title < b.title) { return -1; }
             if (a.title > b.title) { return 1; }
             return 0;
         })
     }
     if (req.query.filter === "completed") {
-        jsonResponse = jsonResponse.filter(todo => todo.completed)
+        initialTodos = initialTodos.filter(todo => todo.completed)
     } else if (req.query.filter === "uncompleted") {
-        jsonResponse = jsonResponse.filter(todo => !todo.completed)
+        initialTodos = initialTodos.filter(todo => !todo.completed)
     }
-    res.json(jsonResponse)
+    res.json(initialTodos)
 })
 app.get('/todos/save', (req, res) => {
     console.log(`GET /todos/save at ${Date.now()}`)
-    fs.writeFile('./todos.txt', Date.now().toString(), 'utf8', function (err) {
+    const textToWrite = initialTodos.map(t => t.title).join("\n")
+    console.log(textToWrite)
+    fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
         if (err) return console.log(err);
         console.log('Hello World > helloworld.txt');
     })
