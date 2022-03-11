@@ -45,7 +45,7 @@ app.get('/todos', (req, res) => {
     }
     res.json(initialTodos)
 })
-app.get('/todos/save', (req, res) => {
+app.post('/todos/save', (req, res) => {
     console.log(`GET /todos/save at ${Date.now()}`)
     const textToWrite = initialTodos.map(t => t.title).join("\n")
     console.log(textToWrite)
