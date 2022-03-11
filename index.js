@@ -47,13 +47,16 @@ app.get('/todos', (req, res) => {
 })
 app.post('/todos/save', (req, res) => {
     console.log(`GET /todos/save at ${Date.now()}`)
-    const textToWrite = initialTodos.map(t => t.title).join("\n")
-    console.log(textToWrite)
-    fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
-        if (err) return console.log(err);
-        console.log('Hello World > helloworld.txt');
-    })
-    res.json({ message: "yay" })
+    if (req.headers.authorization === "hawai123") {
+        const textToWrite = initialTodos.map(t => t.title).join("\n")
+        fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
+            if (err) return console.log(err);
+            console.log('Saved todos to disk');
+        })
+        res.json({ message: "success" })
+    } else {
+        res.json({ message: "password wrong" })
+    }
 })
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     console.log(`GET 404 at ${Date.now()}`)
