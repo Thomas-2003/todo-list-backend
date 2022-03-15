@@ -13,6 +13,13 @@ var myLogger = function (req, res, next) {
     console.log(`${date} ${req.method} - ${req.originalUrl}`);
     next();
 };
+const authCheck = (req, res, next) => {
+    if (req.headers.authorization === "hawai123") {
+        next()
+    } else {
+        res.json({ message: "password wrong" })
+    }
+}
 app.use(myLogger);
 
 app.get('/', (req, res) => {
@@ -51,18 +58,16 @@ app.get('/todos', (req, res) => {
     }
     res.json(initialTodos)
 })
-app.post('/todos/save', (req, res) => {
-    if (req.headers.authorization === "hawai123") {
-        const textToWrite = initialTodos.map(t => t.title).join("\n")
-        fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
-            if (err) return console.log(err);
-            console.log('Saved todos to disk');
-        })
-        res.json({ message: "success" })
-    } else {
-        res.json({ message: "password wrong" })
-    }
+
+app.post('/todos/save', authCheck, (req, res) => {
+    const textToWrite = initialTodos.map(t => t.title).join("\n")
+    fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
+        if (err) return console.log(err);
+        console.log('Saved todos to disk');
+    })
+    res.json({ message: "success" })
 })
+
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     res.send('This route is not found', 404);
 });
