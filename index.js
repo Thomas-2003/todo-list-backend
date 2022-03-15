@@ -2,9 +2,9 @@ const express = require('express')
 const app = express()
 const port = 4000
 const cors = require('cors');
-const fs = require('fs');
 const { myLogger, authCheck } = require('./helper.js')
-const { initialTodos } = require('./initialData')
+const todosContoller = require('./todosController')
+
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
@@ -18,30 +18,9 @@ app.get('/', (req, res) => {
 //TODO support the use of query params, to sort the list by title
 
 
-app.get('/todos', (req, res) => {
-    if (req.query.sort === "title") {
-        initialTodos = initialTodos.sort((a, b) => {
-            if (a.title < b.title) { return -1; }
-            if (a.title > b.title) { return 1; }
-            return 0;
-        })
-    }
-    if (req.query.filter === "completed") {
-        initialTodos = initialTodos.filter(todo => todo.completed)
-    } else if (req.query.filter === "uncompleted") {
-        initialTodos = initialTodos.filter(todo => !todo.completed)
-    }
-    res.json(initialTodos)
-})
+app.get('/todos', todosContoller.getTodos)
 
-app.post('/todos/save', authCheck, (req, res) => {
-    const textToWrite = initialTodos.map(t => t.title).join("\n")
-    fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
-        if (err) return console.log(err);
-        console.log('Saved todos to disk');
-    })
-    res.json({ message: "success" })
-})
+app.post('/todos/save', authCheck, todosContoller.saveTodos)
 
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     res.send('This route is not found', 404);
