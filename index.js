@@ -4,6 +4,7 @@ const port = 4000
 const cors = require('cors');
 const fs = require('fs');
 const { myLogger, authCheck } = require('./helper.js')
+const { initialTodos } = require('./initialData')
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
@@ -16,21 +17,7 @@ app.get('/', (req, res) => {
 })
 //TODO support the use of query params, to sort the list by title
 
-let initialTodos = [{
-    title: "Bread",
-    id: 1,
-    completed: false
-},
-{
-    title: "Milk",
-    id: 2,
-    completed: true
-},
-{
-    title: "Beer",
-    id: 3,
-    completed: false
-}]
+
 app.get('/todos', (req, res) => {
     if (req.query.sort === "title") {
         initialTodos = initialTodos.sort((a, b) => {
