@@ -6,8 +6,16 @@ const fs = require('fs');
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+var myLogger = function (req, res, next) {
+    const date = new Date().toISOString().
+        replace(/T/, ' ').      // replace T with a space
+        replace(/\..+/, '')
+    console.log(`${date} ${req.method} - ${req.originalUrl}`);
+    next();
+};
+app.use(myLogger);
+
 app.get('/', (req, res) => {
-    console.log(`GET / at ${Date.now()}`)
 
     res.send('Hello World!')
 })
@@ -29,8 +37,6 @@ let initialTodos = [{
     completed: false
 }]
 app.get('/todos', (req, res) => {
-    console.log(`GET /todos at ${Date.now()}`)
-    console.log(req.query);
     if (req.query.sort === "title") {
         initialTodos = initialTodos.sort((a, b) => {
             if (a.title < b.title) { return -1; }
@@ -46,7 +52,6 @@ app.get('/todos', (req, res) => {
     res.json(initialTodos)
 })
 app.post('/todos/save', (req, res) => {
-    console.log(`GET /todos/save at ${Date.now()}`)
     if (req.headers.authorization === "hawai123") {
         const textToWrite = initialTodos.map(t => t.title).join("\n")
         fs.writeFile('./todos.txt', textToWrite, 'utf8', function (err) {
@@ -59,7 +64,6 @@ app.post('/todos/save', (req, res) => {
     }
 })
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
-    console.log(`GET 404 at ${Date.now()}`)
     res.send('This route is not found', 404);
 });
 
