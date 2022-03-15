@@ -3,23 +3,11 @@ const app = express()
 const port = 4000
 const cors = require('cors');
 const fs = require('fs');
+const { myLogger, authCheck } = require('./helper.js')
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
-var myLogger = function (req, res, next) {
-    const date = new Date().toISOString().
-        replace(/T/, ' ').      // replace T with a space
-        replace(/\..+/, '')
-    console.log(`${date} ${req.method} - ${req.originalUrl}`);
-    next();
-};
-const authCheck = (req, res, next) => {
-    if (req.headers.authorization === "hawai123") {
-        next()
-    } else {
-        res.json({ message: "password wrong" })
-    }
-}
+
 app.use(myLogger);
 
 app.get('/', (req, res) => {
