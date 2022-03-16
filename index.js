@@ -5,6 +5,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/todo-list');
 module.exports = { mongoose }
+const bodyparser = require("body-parser")
+app.use(bodyparser.json()); //utilizes the body-parser package
+app.use(bodyparser.urlencoded({
+    extended: true
+}));
+
+
 const { myLogger, authCheck } = require('./helper.js')
 const todosContoller = require('./todosController')
 const authContoller = require('./authController')
