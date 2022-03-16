@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 app.get('/todos', todosContoller.getTodos)
 
 app.post('/todos/save', authCheck, todosContoller.saveTodos)
-app.post('/users/auth', authContoller.getUsers())
+app.post('/users/auth', authContoller.getUsers)
 
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     res.send('This route is not found', 404);
