@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const { secretKey } = require('./authController');
+
 const myLogger = function (req, res, next) {
     const date = new Date().toISOString().
         replace(/T/, ' ').      // replace T with a space
@@ -6,9 +9,12 @@ const myLogger = function (req, res, next) {
     next();
 };
 const authCheck = (req, res, next) => {
-    if (req.headers.authorization === "hawai123") {
+    try {
+        const receivedToken = req.headers.authorization.replace("Bearer ", "")
+        var decoded = jwt.verify(receivedToken, secretKey);
         next()
-    } else {
+    } catch (err) {
+        console.log(`JWT ERROR: `, err)
         res.json({ message: "password wrong" })
     }
 }

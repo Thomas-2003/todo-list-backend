@@ -1,7 +1,9 @@
 const { mongoose } = require('./index')
 const User = mongoose.model('User', { username: String, email: String, password: String });
+var jwt = require('jsonwebtoken');
+const secretKey = "4$23689h2@3238!r923f#h"
 
-const getUsers = (req, res) => {
+const login = (req, res) => {
     //TODO check if user exists by email
     //TODO Check if password is the same as in DB
     //TODO create JWT session token
@@ -10,7 +12,8 @@ const getUsers = (req, res) => {
         if (user) {
             if (user.password === req.body.password) {
                 //TODO generate JWT session token
-                res.json({ token: "234kdlsfjdklsf" })
+                var token = jwt.sign({ email: req.body.email }, secretKey);
+                res.json({ token: token })
             } else {
                 res.json({ error: "password incorrect" })
             }
@@ -19,4 +22,4 @@ const getUsers = (req, res) => {
         }
     })
 }
-module.exports = { getUsers }
+module.exports = { login, secretKey }

@@ -29,10 +29,10 @@ app.get('/', (req, res) => {
 //TODO support the use of query params, to sort the list by title
 
 
-app.get('/todos', todosContoller.getTodos)
+app.get('/todos', authCheck, todosContoller.getTodos)
 
 app.post('/todos/save', authCheck, todosContoller.saveTodos)
-app.post('/users/auth', authContoller.getUsers)
+app.post('/users/auth', authContoller.login)
 
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     res.send('This route is not found', 404);

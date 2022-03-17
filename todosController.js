@@ -15,7 +15,7 @@ const getTodos = (req, res) => {
     } else if (req.query.filter === "uncompleted") {
         initialTodos = initialTodos.filter(todo => !todo.completed)
     }
-    res.json(initialTodos)
+    res.json({ message: "success", todos: initialTodos })
 }
 const saveTodos = (req, res) => {
     const textToWrite = initialTodos.map(t => t.title).join("\n")
