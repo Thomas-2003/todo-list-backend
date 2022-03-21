@@ -2,6 +2,8 @@ const { mongoose } = require('./index')
 const User = mongoose.model('User', { username: String, email: String, password: String });
 var jwt = require('jsonwebtoken');
 const secretKey = "4$23689h2@3238!r923f#h"
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const login = (req, res) => {
     //TODO check if user exists by email
@@ -22,4 +24,16 @@ const login = (req, res) => {
         }
     })
 }
-module.exports = { login, secretKey }
+const register = (req, res) => {
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+        // Store hash in your password DB.
+        const createdUser = User.create({
+            email: req.body.email,
+            password: hash
+        }).then(success => {
+            res.json({ message: "User created" })
+        })
+    });
+
+}
+module.exports = { login, secretKey, register }

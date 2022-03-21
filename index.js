@@ -33,6 +33,7 @@ app.get('/todos', authCheck, todosContoller.getTodos)
 
 app.post('/todos/save', authCheck, todosContoller.saveTodos)
 app.post('/users/auth', authContoller.login)
+app.post('/users/register', authContoller.register)
 
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes
     res.send('This route is not found', 404);
