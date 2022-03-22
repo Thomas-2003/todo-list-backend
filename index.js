@@ -17,7 +17,7 @@ const todosContoller = require('./todosController')
 const authContoller = require('./authController')
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://todo-list-backend-amber.vercel.app']
 }));
 
 app.use(myLogger);
