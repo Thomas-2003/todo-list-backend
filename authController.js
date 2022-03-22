@@ -12,16 +12,21 @@ const login = (req, res) => {
     //TODO respond token to client
     User.findOne({ email: req.body.email }).then(user => {
         if (user) {
-            if (user.password === req.body.password) {
-                //TODO generate JWT session token
-                var token = jwt.sign({ email: req.body.email }, secretKey);
-                res.json({ token: token })
-            } else {
-                res.json({ error: "password incorrect" })
-            }
+            bcrypt.compare(req.body.password, user.password, function (err, result) {
+
+
+                if (!err) {
+                    //TODO generate JWT session token
+                    var token = jwt.sign({ email: req.body.email }, secretKey);
+                    res.json({ token: token })
+                } else {
+                    res.json({ error: "password incorrect" })
+                }
+            })
         } else {
             res.json({ error: "email not found" })
         }
+
     })
 }
 const register = (req, res) => {
