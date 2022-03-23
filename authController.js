@@ -14,8 +14,7 @@ const login = (req, res) => {
         if (user) {
             bcrypt.compare(req.body.password, user.password, function (err, result) {
 
-
-                if (!err) {
+                if (result) {
                     //TODO generate JWT session token
                     var token = jwt.sign({ email: req.body.email }, secretKey);
                     res.json({ token: token })
