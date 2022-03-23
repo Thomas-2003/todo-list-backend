@@ -1,5 +1,5 @@
 const { mongoose } = require('./index')
-const User = mongoose.model('User', { username: String, email: String, password: String });
+const User = mongoose.model('User', { username: String, email: String, password: String, username: String, balance: Number });
 var jwt = require('jsonwebtoken');
 const secretKey = "4$23689h2@3238!r923f#h"
 const bcrypt = require('bcrypt');
@@ -29,15 +29,22 @@ const login = (req, res) => {
     })
 }
 const register = (req, res) => {
-    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-        // Store hash in your password DB.
-        const createdUser = User.create({
-            email: req.body.email,
-            password: hash
-        }).then(success => {
-            res.json({ message: "User created" })
-        })
-    });
-
+    User.findOne({ email: req.body.email }).then(user => {
+        if (!user) {
+            bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+                // Store hash in your password DB.
+                const createdUser = User.create({
+                    email: req.body.email,
+                    password: hash,
+                    username: req.body.username,
+                    balance: req.body.balance
+                }).then(success => {
+                    res.json({ message: "User created" })
+                })
+            });
+        } else {
+            res.status(409).json({ error: "you alraedy registered" })
+        }
+    })
 }
 module.exports = { login, secretKey, register }
