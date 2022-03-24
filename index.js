@@ -35,6 +35,8 @@ app.post('/todos/save', authCheck, todosContoller.saveTodos)
 app.post('/users/login', authContoller.login)
 app.post('/users/register', authContoller.register)
 app.post('/users/delete', authContoller.deleteToDo)
+app.post('/users/edit', authContoller.edit)
+
 
 
 app.get('*', function (req, res) { // wildcard route, to catch all missing routes

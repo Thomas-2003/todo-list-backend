@@ -58,4 +58,21 @@ const deleteToDo = (req, res) => {
         }
     })
 }
-module.exports = { login, secretKey, register, deleteToDo }
+const edit = (req, res) => {
+    User.findOne({ email: req.body.email }).then(async user => {
+        if (user) {
+            user.balance = req.body.balance
+            user.username = req.body.username
+            try {
+                await user.save()
+                res.json({ message: "User edit succesfully" })
+
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            res.status(404).json({ error: "email not found" })
+        }
+    })
+}
+module.exports = { login, secretKey, register, deleteToDo, edit }
