@@ -61,8 +61,17 @@ const deleteToDo = (req, res) => {
 const edit = (req, res) => {
     User.findOne({ email: req.body.email }).then(async user => {
         if (user) {
+
+            if (/\w{2,20}/.test(req.body.username)) {
+                console.log("username");
+                user.username = req.body.username
+            }
+            else {
+                console.log("invalide");
+            }
             user.balance = req.body.balance
-            user.username = req.body.username
+            user.email = req.body.email
+
             try {
                 await user.save()
                 res.json({ message: "User edit succesfully" })
