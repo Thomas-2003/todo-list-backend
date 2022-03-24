@@ -47,4 +47,15 @@ const register = (req, res) => {
         }
     })
 }
-module.exports = { login, secretKey, register }
+const deleteToDo = (req, res) => {
+    User.findOne({ email: req.body.email }).then(user => {
+        if (user) {
+            user.remove(function (result) {
+                res.json({ message: "User delete succesfully" })
+            })
+        } else {
+            res.status(404).json({ error: "email not found" })
+        }
+    })
+}
+module.exports = { login, secretKey, register, deleteToDo }
