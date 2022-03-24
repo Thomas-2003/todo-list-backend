@@ -34,8 +34,8 @@ app.get('/todos', authCheck, todosContoller.getTodos)
 app.post('/todos/save', authCheck, todosContoller.saveTodos)
 app.post('/users/login', authContoller.login)
 app.post('/users/register', authContoller.register)
-app.post('/users/delete', authContoller.deleteToDo)
-app.post('/users/edit', authContoller.edit)
+app.post('/users/delete', authCheck, authContoller.deleteToDo)
+app.post('/users/edit', authCheck, authContoller.edit)
 
 
 
