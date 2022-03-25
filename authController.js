@@ -1,5 +1,9 @@
+const nodemailer = require('nodemailer');
+require('dotenv').config()
+console.log(process.env) // remove this after you've confirmed it working
+const { uuid } = require('uuidv4');
 const { mongoose } = require('./index')
-const User = mongoose.model('User', { username: String, email: String, password: String, username: String, balance: Number });
+const User = mongoose.model('User', { username: String, email: String, password: String, username: String, balance: Number, verificationToken: String, verifiedAt: Date });
 var jwt = require('jsonwebtoken');
 const secretKey = "4$23689h2@3238!r923f#h"
 const bcrypt = require('bcrypt');
@@ -32,14 +36,39 @@ const register = (req, res) => {
     User.findOne({ email: req.body.email }).then(user => {
         if (!user) {
             bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+                const verificationToken = uuid()
                 // Store hash in your password DB.
                 const createdUser = User.create({
                     email: req.body.email,
                     password: hash,
                     username: req.body.username,
-                    balance: req.body.balance
+                    balance: req.body.balance,
+                    verificationToken: verificationToken
                 }).then(success => {
-                    res.json({ message: "User created" })
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        host: 'smtp.gmail.com',
+                        auth: {
+                            user: 'fraankrr@gmail.com',
+                            pass: process.env.GMAILPASSWORD
+                        }
+                    });
+
+                    var mailOptions = {
+                        from: 'somerealemail@gmail.com',
+                        to: req.body.email,
+                        subject: 'Sending Email using Node.js[nodemailer]',
+                        html: "click to <a href='http://localhost:4000/verify/" + verificationToken + "'>here</a>"
+                    };
+
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                            res.json({ message: "User created" })
+                        }
+                    });
                 })
             });
         } else {
@@ -47,6 +76,19 @@ const register = (req, res) => {
         }
     })
 }
+const verify = (req, res) => {
+    User.findOne({ verificationToken: req.params.uuid }).then(user => {
+        if (user) {
+            user.verifiedAt = new Date()
+            user.save(function (result) {
+                res.json({ message: "User verified succesfully" })
+            })
+        } else {
+            res.status(404).json({ error: "email not found" })
+        }
+    })
+}
+
 const deleteToDo = (req, res) => {
     User.findOne({ email: req.body.email }).then(user => {
         if (user) {
@@ -84,4 +126,4 @@ const edit = (req, res) => {
         }
     })
 }
-module.exports = { login, secretKey, register, deleteToDo, edit }
+module.exports = { login, secretKey, register, deleteToDo, edit, verify }

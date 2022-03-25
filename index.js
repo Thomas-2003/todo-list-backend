@@ -36,6 +36,8 @@ app.post('/users/login', authContoller.login)
 app.post('/users/register', authContoller.register)
 app.post('/users/delete', authCheck, authContoller.deleteToDo)
 app.post('/users/edit', authCheck, authContoller.edit)
+app.get('/verify/:uuid', authContoller.verify)
+
 
 
 
